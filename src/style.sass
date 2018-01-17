@@ -1,0 +1,93 @@
+@import url('https://use.typekit.net/xdr8ilg.css')
+$font-family: 'rift-soft', Verdana, sans-serif
+
+body
+  display: block // lazy override inline
+  margin: 0
+  overflow: hidden
+  font-family: $font-family
+  text-transform: uppercase
+  color: #000
+  font-size: 20px
+
+.intro
+  position: fixed
+  top: 0
+  left: 0
+  padding: 40px 20px 20px 40px
+  @media (min-width: 600px)
+    padding: 80px 20px 20px 80px
+
+h1
+  margin: 0 0 30px
+  font-weight: 700
+  font-size: 80px
+  color: #fff
+
+h2
+  margin: 0
+  font-weight: 400
+  font-size: 50px
+  line-height: 50px
+
+h3
+  margin: 0 0 40px
+  font-weight: 400
+  font-style: italic
+  font-size: 50px
+  line-height: 50px
+
+p
+  margin: 0
+
+.slider
+  height: 1em
+  position: relative
+  overflow: hidden
+
+$n: 6
+
+.slides
+  position: absolute
+  display: inline
+  list-style: none
+  margin: 0 0 0 10px
+  padding: 0
+  white-space: nowrap
+  animation: slide #{$n*4}s linear infinite
+
+@keyframes slide
+  @for $i from 0 to $n
+    #{$i / $n * 100}%
+      transform: translateY(-#{$i}em)
+    #{(0.95+$i) / $n * 100}%
+      transform: translateY(-#{$i}em)
+  100%
+    transform: translateY(-#{$n}em)
+
+.newsletter
+  font-family: $font-family
+  position: relative
+  background: rgba(#fff, 0.6)
+  padding: 10px
+  margin: 0 0 20px
+  border: 0
+  width: 400px
+  max-width: 100%
+  font-size: 30px
+  &::placeholder
+    color: #000
+  &:focus
+    outline: none
+    background: #fff
+
+::selection
+  background: #fff
+  color: #000
+
+a
+  color: #000
+  border: 1px solid transparent
+  text-decoration: none
+  &:hover, &:active
+    border: 1px dashed #000
