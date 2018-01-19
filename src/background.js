@@ -1,7 +1,7 @@
 import Vector2 from './utils/Vector2';
 import { random, randomInteger, clamp } from './utils/numberUtils';
 
-function hsl(h, s, l) { return 'hsl('+h+', '+clamp(s,0,100)+'%, '+clamp(l,0,100)+'%)';};
+function hsl(h, s, l) { return `hsl(${h}, ${clamp(s,0,100)}%, ${clamp(l,0,100)}%)`;};
 
 
 let	screenWidth = window.innerWidth;
@@ -16,20 +16,20 @@ const options = {
 };
 const prettyHues = [2, 10, 17, 37, 40, 63, 67, 72, 74, 148, 152, 156, 160, 170, 175, 189, 194, 260, 270, 280, 288, 302, 320, 330, 340, 350];
 
-var canvas,
-		c;
-var dots = [];
+let canvas,	c;
+let dots = [];
 
-function setup() {
-  window.frameRate = 30;
+const setup = () => {
   setupCanvas();
+
 	c.fillStyle = options.background;
 	c.strokeStyle = options.color;
   c.fillRect(-screenWidth/2, -screenHeight/2, screenWidth, screenHeight);
+
   makeDots(options.count);
 }
 
-function makeDots(count) {
+const makeDots = (count) => {
   for (var i = 0; i < count; i++) {
     var x = randomInteger(-screenWidth*0.5,screenWidth*0.5);
     var y = randomInteger(-screenHeight*0.5,screenHeight*0.5);
@@ -47,20 +47,19 @@ function makeDots(count) {
   }
 }
 
-function draw() {
-  for (var i = 0; i < dots.length; i++) {
-    var dot = dots[i];
+const draw = () => {
+  dots.forEach((dot) => {
     dot.update(canvas);
     dot.draw(c);
-  }
+  });
 }
 
-function setupCanvas() {
+const setupCanvas = () => {
   canvas = document.createElement('canvas');
-  c = canvas.getContext('2d');
   canvas.width = screenWidth;
   canvas.height = screenHeight;
   document.body.appendChild(canvas);
+  c = canvas.getContext('2d');
   c.translate(screenWidth/2, screenHeight/2);
 }
 
@@ -119,15 +118,14 @@ const Dot = function(x, y, index) {
 
 };
 
-
-function loop() {
+const loop = () => {
   draw();
   window.requestAnimationFrame(loop);
 }
 
 window.addEventListener('load', init);
 
-function init() {
+const init = () => {
   setup();
   window.requestAnimationFrame(loop);
 }
