@@ -2,6 +2,8 @@
 
 A splash page
 
+![Yay colours](/src/assets/twittercard.jpg?raw=true)
+
 ## :raised_hands: Make it work locally
 
 We like [Yarn](https://github.com/yarnpkg/yarn) for dependency management, installation instructions can be found [here](https://yarnpkg.com/en/docs/install).
