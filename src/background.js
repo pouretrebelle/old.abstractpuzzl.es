@@ -3,30 +3,23 @@ import { random, randomInteger, clamp } from './utils/numberUtils';
 
 function hsl(h, s, l) { return `hsl(${h}, ${clamp(s,0,100)}%, ${clamp(l,0,100)}%)`;};
 
-
 let	screenWidth = window.innerWidth;
 let screenHeight = window.innerHeight;
 let screenMin = (screenWidth < screenHeight) ? screenWidth : screenHeight;
 
-const options = {
-	background: '#fff',
-  predraw: 200,
-  color: '#000',
-  count: screenWidth * screenHeight * 0.00005,
-};
 const prettyHues = [2, 10, 17, 37, 40, 63, 67, 72, 74, 148, 152, 156, 160, 170, 175, 189, 194, 260, 270, 280, 288, 302, 320, 330, 340, 350];
 
-let canvas,	c;
-let dots = [];
+const background = {
+  c: undefined,
+  dots: [],
+  backgroundColor: '#fff',
+  dotCount: screenWidth * screenHeight * 0.00005,
+  dotPredraws: 200,
+}
 
 const setup = () => {
   setupCanvas();
-
-	c.fillStyle = options.background;
-	c.strokeStyle = options.color;
-  c.fillRect(-screenWidth/2, -screenHeight/2, screenWidth, screenHeight);
-
-  makeDots(options.count);
+  makeDots(background.dotCount);
 }
 
 const makeDots = (count) => {
@@ -36,33 +29,35 @@ const makeDots = (count) => {
 
     const dot = new Dot(x, y, i);
 
-    let tempPredraw = options.predraw;
+    let tempPredraw = background.dotPredraws;
     while (tempPredraw > 0) {
-      dot.update(canvas);
-      dot.draw(c);
+      dot.update();
+      dot.draw();
       tempPredraw--;
     }
 
-    dots.push(dot);
+    background.dots.push(dot);
   }
 }
 
 const draw = () => {
-  dots.forEach((dot) => {
-    dot.update(canvas);
-    dot.draw(c);
+  background.dots.forEach((dot) => {
+    dot.update();
+    dot.draw();
   });
 }
 
 const setupCanvas = () => {
-  canvas = document.createElement('canvas');
+  const canvas = document.createElement('canvas');
   canvas.width = screenWidth;
   canvas.height = screenHeight;
   document.body.appendChild(canvas);
-  c = canvas.getContext('2d');
-  c.translate(screenWidth/2, screenHeight/2);
-}
 
+  background.c = canvas.getContext('2d');
+	background.c.fillStyle = background.backgroundColor;
+  background.c.translate(screenWidth/2, screenHeight/2);
+  background.c.fillRect(-screenWidth/2, -screenHeight/2, screenWidth, screenHeight);
+}
 
 class Dot {
 
@@ -83,7 +78,7 @@ class Dot {
     this.vel.rotate(this.ang);
   }
 
-  update(canvas) {
+  update() {
 		// randomly change clockwiseness
 		if (Math.random() < 0.01) {
 			this.dir = (this.dir == 1) ? 0 : 1;
@@ -101,21 +96,21 @@ class Dot {
   };
 
   draw(c) {
-    c.save();
+    background.c.save();
 
     // draw shadow dot
-    c.fillStyle = this.shadow;
-		c.beginPath();
-      c.arc(this.pos.x,this.pos.y+5,this.size,0,Math.PI*2,true);
-		c.fill();
+    background.c.fillStyle = this.shadow;
+		background.c.beginPath();
+      background.c.arc(this.pos.x,this.pos.y+5,this.size,0,Math.PI*2,true);
+		background.c.fill();
 
     // draw upper dot
-    c.fillStyle = this.color;
-		c.beginPath();
-      c.arc(this.pos.x,this.pos.y,this.size,0,Math.PI*2,true);
-		c.fill();
+    background.c.fillStyle = this.color;
+		background.c.beginPath();
+      background.c.arc(this.pos.x,this.pos.y,this.size,0,Math.PI*2,true);
+		background.c.fill();
 
-    c.restore();
+    background.c.restore();
   };
 
 };
