@@ -64,53 +64,55 @@ const setupCanvas = () => {
 }
 
 
-const Dot = function(x, y, index) {
+class Dot {
 
-  var hue = (prettyHues[randomInteger(0, prettyHues.length-1)]-20)%360;
-  var sat = randomInteger(80, 100);
-  var bri = randomInteger(65, 75);
-  var speed = random(1, 3);
+  constructor(x, y, index) {
+    const hue = (prettyHues[randomInteger(0, prettyHues.length-1)]-20)%360;
+    const sat = randomInteger(80, 100);
+    const bri = randomInteger(65, 75);
+    this.color = hsl(hue, sat, bri);
+    this.shadow = hsl((hue+40)%360, sat, bri);
 
-  var size = this.size = randomInteger(25, 50);
-	var pos = this.pos = new Vector2(x,y);
-	var vel = this.vel = new Vector2(speed,0);
-	var ang = this.ang = 180-pos.angle();
-  var rot = this.rot = random(0.01,0.08);
-	var dir = this.dir = randomInteger(0,1);
+    this.size = randomInteger(25, 50);
+    this.pos = new Vector2(x,y);
+    this.vel = new Vector2(random(1, 3),0);
+    this.ang = 180-this.pos.angle();
+    this.rot = random(0.01,0.08);
+    this.dir = randomInteger(0,1);
 
-	vel.rotate(ang);
+    this.vel.rotate(this.ang);
+  }
 
-  this.color = hsl(hue, sat, bri);
-  this.shadow = hsl((hue+40)%360, sat, bri);
-
-  this.update = function(canvas) {
-
+  update(canvas) {
 		// randomly change clockwiseness
 		if (Math.random() < 0.01) {
-			dir = (dir == 1) ? 0 : 1;
+			this.dir = (this.dir == 1) ? 0 : 1;
 		}
 
 		// rotate
-		if (dir) {
-			vel.rotate(this.rot);
+		if (this.dir) {
+			this.vel.rotate(this.rot);
 		} else {
-			vel.rotate(-this.rot);
-		}
+			this.vel.rotate(-this.rot);
+    }
+
 		// add velocity to position
-		pos.plusEq(vel);
+		this.pos.plusEq(this.vel);
   };
 
-  this.draw = function(c) {
+  draw(c) {
     c.save();
 
+    // draw shadow dot
     c.fillStyle = this.shadow;
 		c.beginPath();
-      c.arc(pos.x,pos.y+5,this.size,0,Math.PI*2,true);
+      c.arc(this.pos.x,this.pos.y+5,this.size,0,Math.PI*2,true);
 		c.fill();
 
+    // draw upper dot
     c.fillStyle = this.color;
 		c.beginPath();
-      c.arc(pos.x,pos.y,this.size,0,Math.PI*2,true);
+      c.arc(this.pos.x,this.pos.y,this.size,0,Math.PI*2,true);
 		c.fill();
 
     c.restore();
@@ -123,9 +125,9 @@ const loop = () => {
   window.requestAnimationFrame(loop);
 }
 
-window.addEventListener('load', init);
-
 const init = () => {
   setup();
   window.requestAnimationFrame(loop);
 }
+
+window.addEventListener('load', init);
