@@ -11,4 +11,4 @@ A splash page
 
 ## :rocket: Deploy it
 
-The site is deployed to [abstractpuzzl.es](http://abstractpuzzl.es/) using Github Pages from the `docs` folder. The app can be updated by running `npm run build` and then committing with a `:rocket:` commit message.
+The site is deployed to [abstractpuzzl.es](http://abstractpuzzl.es/) using Github Pages from the `docs` folder. The app can be updated by running `npm run build` and then committing with a `:rocket:` commit message. You can test the built version by running `npm run serve`.
