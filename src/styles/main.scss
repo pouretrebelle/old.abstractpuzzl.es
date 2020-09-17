@@ -70,15 +70,24 @@ button {
 }
 
 .links {
-  margin: 0 0 1em;
   li {
     display: inline-block;
-    margin: 0 0.5em;
+    margin: 0 0.75em;
+  }
+
+  a:focus {
+    color: var(--color-hightlight);
+  }
+
+  svg {
+    width: 1.5em;
+    height: 1.5em;
   }
 }
 
 .newsletter {
   font-size: clamp(18px, 0.75em, 20px);
+  margin-top: 1em;
 }
 
 .newsletter__input {
