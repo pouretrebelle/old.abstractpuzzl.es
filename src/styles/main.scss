@@ -1,0 +1,93 @@
+@import 'reset';
+
+$dark: #242733;
+$light: #fffcf9;
+
+:root {
+  --color-text: #{$dark};
+  --color-background: #{$light};
+  --color-frame: #{rgba($dark, 0.1)};
+  --color-hightlight: #f96767;
+
+  @media (prefers-color-scheme: dark) {
+    --color-text: #{$light};
+    --color-background: #{$dark};
+    --color-frame: #{rgba($light, 0.1)};
+  }
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+  padding: 1em;
+  background: var(--color-background);
+  font-family: Helvetica, Ariel, sans-serif;
+  color: var(--color-text);
+  font-size: clamp(18px, 5vmin, 32px);
+  text-align: center;
+}
+
+::selection {
+  background-color: var(--color-hightlight);
+}
+
+a,
+button {
+  color: inherit;
+  text-decoration-color: var(--color-hightlight);
+  text-decoration-style: dotted;
+  text-decoration-skip-ink: none;
+  outline: none;
+
+  &:focus {
+    text-decoration-style: solid;
+  }
+}
+
+.intro p {
+  margin-top: 0.2em;
+}
+
+.puzzle {
+  --size: clamp(200px, 50vh, 80vw);
+  width: var(--size);
+  height: var(--size);
+  margin: 0.5em auto;
+  padding: 0.2em;
+  background: var(--color-frame);
+
+  img {
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.links {
+  margin: 0 0 1em;
+  li {
+    display: inline-block;
+    margin: 0 0.5em;
+  }
+}
+
+.newsletter {
+  font-size: clamp(18px, 0.75em, 20px);
+}
+
+.newsletter__input {
+  width: clamp(200px, 80vw, 15ch);
+  border: 2px solid var(--color-frame);
+  outline: none;
+  margin: 0.5em 0;
+
+  &:focus {
+    border-color: var(--color-hightlight);
+  }
+}
