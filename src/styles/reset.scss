@@ -1,0 +1,110 @@
+html,
+body,
+div,
+ol,
+h1,
+h2,
+h3,
+h4,
+h5,
+p,
+li,
+ul,
+a,
+select,
+header,
+footer,
+nav,
+fieldset,
+label,
+aside,
+input,
+textarea,
+figcaption {
+  padding: 0;
+  margin: 0;
+  border: 0;
+  font-size: 100%;
+  vertical-align: baseline;
+}
+
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+menu,
+nav,
+section,
+div,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+textarea,
+label {
+  display: block;
+}
+
+ul,
+ol {
+  list-style: none;
+}
+
+img {
+  vertical-align: middle;
+}
+
+html {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
+body {
+  overflow-x: hidden;
+}
+
+input[type='number']::-webkit-outer-spin-button,
+input[type='number']::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type='number'] {
+  -moz-appearance: textfield;
+}
+
+textarea,
+input[type='text'],
+input[type='email'],
+input[type='password'],
+input[type='submit'] {
+  -webkit-appearance: none;
+  box-shadow: none;
+  color: inherit;
+  font-family: inherit;
+  background: none;
+}
+
+button {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+svg {
+  fill: currentColor;
+}
