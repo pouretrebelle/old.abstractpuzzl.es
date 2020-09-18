@@ -10,7 +10,7 @@ module.exports = (webpackEnv) => {
   return {
     mode: isProduction ? 'production' : 'development',
     devtool: isProduction ? 'source-map' : 'inline-source-map',
-    entry: [path.join(__dirname, 'src/main.js')],
+    entry: [path.join(__dirname, 'src/main.ts')],
     output: {
       path: path.join(__dirname, '/docs/'),
       filename: isProduction ? '[name].[contenthash:8].js' : 'bundle.js',
@@ -29,9 +29,9 @@ module.exports = (webpackEnv) => {
     module: {
       rules: [
         {
-          test: /\.jsx?$/,
+          test: /\.[tj]s$/,
           exclude: /node_modules/,
-          loader: 'babel-loader',
+          loader: 'ts-loader',
         },
         {
           test: /\.pug?$/,
@@ -64,6 +64,9 @@ module.exports = (webpackEnv) => {
           },
         },
       ],
+    },
+    resolve: {
+      extensions: ['.ts', '.js'],
     },
   }
 }
