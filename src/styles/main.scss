@@ -13,7 +13,6 @@ $columns: 14;
   --color-frame: #{desaturate(darken($light, 5%), 50%)};
   --color-hightlight: #f96767;
 
-  --animate: 1;
   --windowWidthScalar: 1;
   --windowHeightScalar: 1;
 
@@ -21,27 +20,6 @@ $columns: 14;
     --color-text: #{$light};
     --color-background: #{$dark};
     --color-frame: #{desaturate(lighten($dark, 5%), 50%)};
-  }
-}
-
-@keyframes animate {
-  0% {
-    --animate: 0;
-  }
-  20% {
-    --animate: 0.2;
-  }
-  40% {
-    --animate: 0.4;
-  }
-  60% {
-    --animate: 0.6;
-  }
-  80% {
-    --animate: 0.8;
-  }
-  100% {
-    --animate: 1;
   }
 }
 
@@ -61,7 +39,6 @@ body {
   color: var(--color-text);
   font-size: clamp(18px, 5vmin, 32px);
   text-align: center;
-  // animation: animate 5s linear infinite alternate;
 }
 
 ::selection {
@@ -72,12 +49,11 @@ a,
 button {
   color: inherit;
   text-decoration-color: var(--color-hightlight);
-  text-decoration-style: dotted;
-  text-decoration-skip-ink: none;
+  text-decoration-style: solid;
   outline: none;
 
   &:focus {
-    text-decoration-style: solid;
+    text-decoration-style: dotted;
   }
 }
 
@@ -109,68 +85,26 @@ button {
   }
 
   path {
+    --x: 0px;
+    --y: 0px;
+    --rotate: 0deg;
+    $s: 30;
     fill: url(#puzzle-pattern);
     stroke: var(--color-frame);
     stroke-width: 0.1vmin;
-
-    // remove unit from $size
-    $s: $size / ($size * 0 + 1);
-    --startX: calc(
-      var(--pieceX) * (100 * var(--windowWidthScalar) - #{$s}) / #{(2 * $s)} *
-        100%
-    );
-    --endX: 0px;
-    --startY: calc(
-      var(--pieceY) * (100 * var(--windowHeightScalar) - #{$s}) / #{(2 * $s)} *
-        100%
-    );
-    --endY: 0px;
-    --startRotate: 0deg; // set randomly below
-    --endRotate: 0deg;
-    // lerp between start and end using --animate
-    --x: calc(
-      var(--startX) * (-1 * var(--animate) + 1) + var(--endX) * var(--animate)
-    );
-    --y: calc(
-      var(--startY) * (-1 * var(--animate) + 1) + var(--endY) * var(--animate)
-    );
-    --rotate: calc(
-      var(--startRotate) * (-1 * var(--animate) + 1) + var(--endRotate) *
-        var(--animate)
-    );
-    // set origin to the middle of each piece so they can be rotated without fill-box
-    // if we used 50% 50% and fill-box, using percentages for position in the whole svg won't work
     transform-origin: calc(50% + 50% * var(--pieceX))
       calc(50% + 50% * var(--pieceY));
     transform: translate(var(--x), var(--y)) rotate(var(--rotate));
-
-    @for $column from 1 through $columns {
-      &:nth-of-type(n + #{1-$rows + $column*$rows}) {
-        // -1 for left edge, +1 for right edge
-        --pieceX: #{-1+ (-1+2 * $column) / $columns};
-      }
-    }
-
-    @for $row from 1 through $rows {
-      &:nth-of-type(#{$columns}n + #{$row}) {
-        // -1 for top edge, +1 for bottom edge
-        --pieceY: #{-1+ (-1+2 * $row) / $rows};
-      }
-    }
-
-    @for $i from 1 through $rows * $columns {
-      &:nth-of-type(#{$i}) {
-        // between 50 - 100, randomly +/-
-        --startRotate: #{(50 + random(50)) * (-3 + round(random(2)) * 2)}deg;
-      }
-    }
   }
 }
 
 .links {
   li {
     display: inline-block;
-    margin: 0 0.75em;
+  }
+
+  li + li {
+    margin-left: 0.75em;
   }
 
   a:focus {
@@ -180,12 +114,13 @@ button {
   svg {
     width: 1.5em;
     height: 1.5em;
+    vertical-align: bottom;
   }
 }
 
 .newsletter {
   font-size: clamp(18px, 0.75em, 20px);
-  margin-top: 1em;
+  margin-top: 1.5em;
 }
 
 .newsletter__input {
@@ -198,16 +133,3 @@ button {
     border-color: var(--color-hightlight);
   }
 }
-
-canvas {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  // pointer-events: none;
-}
-
-// body *:not(canvas) {
-//   opacity: 0;
-// }
