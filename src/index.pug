@@ -27,12 +27,17 @@ html
       p.js-avoid A generative art jigsaw project by #[a(href="https://charlottedann.com/") Charlotte&nbsp;Dann]
       p.js-avoid One puzzle posted every week
 
-    aside.puzzle
+    aside.puzzle#puzzle-wrapper
       svg#puzzle(xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000")
         defs
           pattern#puzzle-pattern(height="100%" width="100%" patternUnits="userSpaceOnUse")
             image(width="1000" height="1000" preserveAspectRatio="xMidYMax slice", xlink:href="assets/puzzle.png")
         include assets/puzzle.svg
+      .puzzle__triggers
+        - var n = 0
+        while n < (14 * 14)
+          i.js-trigger(data-index=n)
+          - n++
 
     footer.section
       ul.links.js-avoid

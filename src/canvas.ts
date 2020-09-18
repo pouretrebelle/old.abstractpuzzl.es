@@ -1,5 +1,5 @@
 import Vector2 from './utils/Vector2'
-import { random, randomInteger } from './utils/numberUtils'
+import { clamp, random, randomInteger } from './utils/numberUtils'
 
 let screenWidth = window.innerWidth
 let screenHeight = window.innerHeight
@@ -145,31 +145,40 @@ const init = () => {
     paths[i].style.setProperty('--y', `${difference.y * 100}%`)
     paths[i].style.setProperty(
       '--transition-speed',
-      `${Math.floor(difference.magnitude() * 1000)}ms`
+      `${Math.floor(clamp(difference.magnitude() * 1000, 200, 400))}ms`
     )
   }
 
-  setAnimation()
+  setupTriggers()
 }
 
-let anim: NodeJS.Timeout
-const setAnimation = () => {
-  setTimeout(() => {
-    anim = setInterval(pickOff, 300)
-  }, 1000)
+const setupTriggers = () => {
+  const triggers = Array.from(document.getElementsByClassName('js-trigger'))
+  triggers.forEach((trigger) => {
+    trigger.addEventListener(
+      'mouseenter',
+      () => {
+        const index = parseInt(trigger.getAttribute('data-index') as string, 10)
+        clearPiece(index)
+      },
+      { once: true }
+    )
+
+    trigger.addEventListener(
+      'mouseleave',
+      () => {
+        trigger.classList.add('js-done')
+      },
+      { once: true }
+    )
+  })
 }
 
-let animI = 0
-const pickOff = () => {
-  const { rows, columns } = background
-  if (animI === rows * columns) return clearInterval(anim)
-
-  const path = paths[animI]
+const clearPiece = (index: number) => {
+  const path = paths[index]
   path.style.removeProperty('--rotate')
   path.style.removeProperty('--x')
   path.style.removeProperty('--y')
-
-  animI++
 }
 
 window.addEventListener('load', init)
