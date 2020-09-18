@@ -23,15 +23,19 @@ html
 
   body
     main.section.intro
-      h1 Abstract Puzzles
-      p A generative art jigsaw project by #[a(href="https://charlottedann.com/") Charlotte&nbsp;Dann]
-      p One puzzle posted every week
+      h1.js-avoid Abstract Puzzles
+      p.js-avoid A generative art jigsaw project by #[a(href="https://charlottedann.com/") Charlotte&nbsp;Dann]
+      p.js-avoid One puzzle posted every week
 
-    aside.puzzle
-      img(src="/puzzle.png" width="500" height="500")
+    aside.puzzle.js-avoid
+      svg#puzzle(xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000")
+        defs
+          pattern#puzzle-pattern(height="100%" width="100%" patternUnits="userSpaceOnUse")
+            image(width="1000" height="1000" preserveAspectRatio="xMidYMax slice", xlink:href="assets/puzzle.png")
+        include assets/puzzle.svg
 
     footer.section
-      ul.links
+      ul.links.js-avoid
         li
           a(href="https://www.instagram.com/abstractpuzzles/" title="Follow on Instagram")
             include icons/instagram
@@ -44,7 +48,7 @@ html
         li
           a(href="https://github.com/pouretrebelle/jigsaws" title="Find the source code for all the art on GitHub")
             include icons/github
-      form.newsletter(action="https://hexatope.us17.list-manage.com/subscribe/post?u=4c51e43f1162adc62d41e6ea5&amp;id=a1420a8048" method="post" target="_blank")
+      form.newsletter.js-avoid(action="https://hexatope.us17.list-manage.com/subscribe/post?u=4c51e43f1162adc62d41e6ea5&amp;id=a1420a8048" method="post" target="_blank")
         label
           | Put your email here to be notified when you can buy a puzzle for yourself:&ensp;
           input.newsletter__input(type="email" name="EMAIL")
