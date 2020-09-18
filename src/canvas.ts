@@ -1,66 +1,113 @@
 import Vector2 from './utils/Vector2'
-import { random, randomInteger, map } from './utils/numberUtils'
+import { random, randomInteger } from './utils/numberUtils'
 
 let screenWidth = window.innerWidth
 let screenHeight = window.innerHeight
-let screenMin = screenWidth < screenHeight ? screenWidth : screenHeight
 
-const canvas = document.createElement('canvas')
-canvas.width = screenWidth
-canvas.height = screenHeight
-document.body.appendChild(canvas)
+interface Box extends Pick<DOMRect, 'top' | 'left' | 'width' | 'height'> {}
 
-interface Box extends Pick<DOMRect, 'top' | 'left' | 'width' | 'height'> {
-  middle: Vector2
-}
-
-const getBox = (element: Element): Box => {
+const getBox = (element: Element, buffer: number = 0): Box => {
   const { top, left, width, height } = element.getBoundingClientRect()
-  const middle = new Vector2(left + width / 2, top + height / 2)
-  return { top, left, width, height, middle }
+  return {
+    top: top - buffer,
+    left: left - buffer,
+    width: width + buffer * 2,
+    height: height + buffer * 2,
+  }
 }
 
 const puzzle = document.getElementById('puzzle') as HTMLElement
 const avoid = Array.from(document.getElementsByClassName('js-avoid'))
-const avoidBoxes = avoid.map(getBox)
+const avoidBoxes = avoid.map((element) => getBox(element, 20))
 
 const background: {
-  c: CanvasRenderingContext2D
-  dots: Dot[]
   rows: number
   columns: number
   avoidBoxes: Box[]
-  avoidPuzzle: Box
+  puzzle: Box
+  placedPieces: Vector2[]
 } = {
-  c: canvas.getContext('2d') as CanvasRenderingContext2D,
-  dots: [],
   rows: 14,
   columns: 14,
-  avoidBoxes: avoidBoxes,
-  avoidPuzzle: getBox(puzzle),
+  avoidBoxes: [getBox(puzzle, 30), ...avoidBoxes],
+  puzzle: getBox(puzzle),
+  placedPieces: [],
 }
 
-const setup = () => {
+const PLACEMENT_ATTEMPTS = 1000
+
+const testPlacement = (pos: Vector2, avoidDistance: number) => {
+  const { avoidBoxes, placedPieces } = background
+
+  // inside walls
+  if (pos.x < 0 || pos.x > screenWidth) return false
+  if (pos.y < 0 || pos.y > screenHeight) return false
+
+  // avoid boxes
+  const hitBox = avoidBoxes.some(
+    (box) =>
+      pos.x > box.left &&
+      pos.x < box.left + box.width &&
+      pos.y > box.top &&
+      pos.y < box.top + box.height
+  )
+  if (hitBox) return false
+
+  // avoid placed pieces
+  const hitDot = placedPieces.some(
+    (piecePos) => pos.dist(piecePos) < avoidDistance
+  )
+  if (hitDot) return false
+
+  return true
+}
+
+const placementVector = new Vector2(0, 1)
+const pickPlacement = (pos: Vector2, radius: number) =>
+  pos.plusNew(
+    placementVector
+      .normalise()
+      .multiplyEq(random(radius / 2, radius))
+      .rotate(random(0, Math.PI))
+  )
+
+const init = () => {
   const { rows, columns } = background
-  const { top, left, width, height } = background.avoidPuzzle
+  const { top, left, width, height } = background.puzzle
   const middle = new Vector2(left + width / 2, top + height / 2)
   const cardinalMiddleToEdge = width / 2 + 10
+  const paths = document.querySelectorAll('#puzzle path') as NodeListOf<
+    HTMLElement
+  >
 
-  for (let i = 0; i < rows * columns; i++) {
+  const count = rows * columns
+
+  const availablePixels = avoidBoxes.reduce(
+    (prev, { width, height }) => prev - width * height,
+    screenWidth * screenHeight
+  )
+  let avoidDistance = Math.max(
+    width / columns,
+    Math.sqrt(availablePixels / count) * 0.75
+  )
+
+  for (let i = 0; i < count; i++) {
     const row = i % rows
     const column = Math.floor(i / columns)
     const startX = left + ((column + 0.5) / columns) * width
     const startY = top + ((row + 0.5) / rows) * height
-    const w = width / columns
-    const h = height / rows
-    const color = `rgb(${
-      column === 0 || column === columns - 1 || row === 0 || row === rows - 1
-        ? 0
-        : 255
-    }, ${map(row, 0, rows, 0, 255)}, ${map(column, 0, columns, 0, 255)})`
+    const startPos = new Vector2(startX, startY)
 
-    const pos = new Vector2(startX, startY)
-    const vecFromMiddle = pos.minusNew(middle)
+    paths[i].style.setProperty(
+      '--pieceX',
+      String(-1 + (2 * (column + 0.5)) / columns)
+    )
+    paths[i].style.setProperty(
+      '--pieceY',
+      String(-1 + (2 * (row + 0.5)) / rows)
+    )
+
+    const vecFromMiddle = startPos.minusNew(middle)
     const vecFromMiddleMag = vecFromMiddle.magnitude()
     vecFromMiddle.normalise()
     const normalMultiplier = Math.max(
@@ -69,180 +116,33 @@ const setup = () => {
     )
     const fullDist = cardinalMiddleToEdge / normalMultiplier - vecFromMiddleMag
     const push = vecFromMiddle.multiplyEq(fullDist * 2.2)
-    pos.plusEq(push)
+    const proposedPos = startPos.plusNew(push)
 
-    const randomDir = new Vector2(0, randomInteger(1, 5))
-    randomDir.rotate(random(0, Math.PI))
+    const radius = fullDist + 10
 
-    pos.plusEq(randomDir)
-
-    const dot = new Dot(pos.x, pos.y, row, column, w, h, color, i)
-
-    background.dots.push(dot)
-  }
-
-  const { dots } = background
-
-  const availablePixels = avoidBoxes.reduce(
-    (prev, { width, height }) => prev - width * height,
-    screenWidth * screenHeight
-  )
-
-  // divide the available space on the page by each dot
-  const avoidDistance = Math.sqrt(availablePixels / dots.length)
-
-  const DOT_DRAW_FRAMES = 0
-  for (let t = 0; t < DOT_DRAW_FRAMES; t++) {
-    dots.forEach((dot) => {
-      dot.update(avoidDistance)
-    })
-  }
-}
-
-// let frames = 0
-const draw = () => {
-  // console.log(frames++)
-  const { dots, avoidBoxes, c } = background
-  c.clearRect(0, 0, screenWidth, screenHeight)
-
-  // c.strokeStyle = 'red'
-  // avoidBoxes.forEach(({ top, left, width, height }) => {
-  //   c.strokeRect(left, top, width, height)
-  // })
-
-  const availablePixels = avoidBoxes.reduce(
-    (prev, { width, height }) => prev - width * height,
-    screenWidth * screenHeight
-  )
-
-  // divide the available space on the page by each dot
-  const avoidDistance = Math.sqrt(availablePixels / dots.length)
-
-  dots.forEach((dot) => {
-    // dot.update(avoidDistance)
-    dot.draw(c)
-  })
-}
-
-class Dot {
-  color: string
-  w: number
-  h: number
-  // row: number
-  // column: number
-  pos: Vector2
-  vel: Vector2
-  rot: number
-  i: number
-
-  constructor(
-    x: number,
-    y: number,
-    row: number,
-    column: number,
-    w: number,
-    h: number,
-    color: string,
-    index: number
-  ) {
-    this.color = color
-    this.w = w
-    this.h = h
-    this.pos = new Vector2(x, y)
-    this.vel = new Vector2(0, 0)
-    this.rot = randomInteger(50, 100) * (Math.random() < 0.5 ? -1 : 1)
-    this.i = index
-  }
-
-  avoid(pos: Vector2, multiplier: number) {
-    const nudge = this.pos.minusNew(pos).normalise().multiplyEq(multiplier)
-    this.vel.plusEq(nudge)
-  }
-
-  move(pos: Vector2, multiplier: number) {
-    const nudge = this.pos.minusNew(pos).normalise().multiplyEq(multiplier)
-    this.pos.plusEq(nudge)
-  }
-
-  update(avoidDistance: number) {
-    const { dots, avoidBoxes, avoidPuzzle } = background
-    // bounce off walls
-    // if (this.pos.x < 0 || this.pos.x > screenWidth) this.vel.x = -this.vel.x
-    // if (this.pos.y < 0 || this.pos.y > screenHeight) this.vel.y = -this.vel.y
-
-    dots.forEach((dot) => {
-      if (dot === this) return
-      // add speed away from
-      if (this.pos.dist(dot.pos) < avoidDistance) {
-        this.avoid(dot.pos, 0.1)
-      }
-      // push away when too close
-      if (this.pos.dist(dot.pos) < this.w) {
-        this.move(dot.pos, 1)
-      }
-    })
-
-    // avoid boxs
-    avoidBoxes.forEach((box) => {
-      if (
-        this.pos.x > box.left &&
-        this.pos.x < box.left + box.width &&
-        this.pos.y > box.top &&
-        this.pos.y < box.top + box.height
-      ) {
-        this.avoid(box.middle, 0.2)
-      }
-    })
-
-    // avoid middle of puzzle
-    const buffer = 30
-    if (
-      this.pos.x > avoidPuzzle.left - buffer &&
-      this.pos.x < avoidPuzzle.left + avoidPuzzle.width + buffer &&
-      this.pos.y > avoidPuzzle.top - buffer &&
-      this.pos.y < avoidPuzzle.top + avoidPuzzle.height + buffer
+    let pos = pickPlacement(proposedPos, radius)
+    let tries = 1
+    while (
+      !testPlacement(pos, avoidDistance - tries) &&
+      tries < PLACEMENT_ATTEMPTS
     ) {
-      this.avoid(avoidPuzzle.middle, 0.2)
+      tries++
+      pos = pickPlacement(pos, radius + tries)
     }
+    if (tries === PLACEMENT_ATTEMPTS) pos = proposedPos
+    console.info(tries)
 
-    // gravity to center
-    this.vel.plusEq(
-      avoidPuzzle.middle.minusNew(this.pos).normalise().multiplyEq(0.02)
+    background.placedPieces.push(pos)
+
+    const difference = pos.minusNew(startPos).divideEq(width)
+
+    paths[i].style.setProperty(
+      '--rotate',
+      `${randomInteger(50, 100) * (Math.random() < 0.5 ? -1 : 1)}deg`
     )
-
-    // limit speed
-    if (this.vel.magnitude() > 1) this.vel.normalise()
-
-    // always be slowing down
-    this.vel.multiplyEq(0.95)
-
-    // add velocity to position
-    this.pos.plusEq(this.vel)
+    paths[i].style.setProperty('--x', `${difference.x * 100}%`)
+    paths[i].style.setProperty('--y', `${difference.y * 100}%`)
   }
-
-  draw(c: CanvasRenderingContext2D) {
-    c.save()
-
-    c.translate(this.pos.x, this.pos.y)
-    c.rotate(this.rot)
-
-    c.fillStyle = this.color
-    c.fillRect(-this.w / 2, -this.h / 2, this.w, this.h)
-
-    c.restore()
-  }
-}
-
-const loop = () => {
-  draw()
-  window.requestAnimationFrame(loop)
-}
-
-const init = () => {
-  setup()
-  window.requestAnimationFrame(loop)
 }
 
 window.addEventListener('load', init)
-
-export default 'hello'

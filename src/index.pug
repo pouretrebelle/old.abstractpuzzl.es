@@ -27,7 +27,7 @@ html
       p.js-avoid A generative art jigsaw project by #[a(href="https://charlottedann.com/") Charlotte&nbsp;Dann]
       p.js-avoid One puzzle posted every week
 
-    aside.puzzle.js-avoid
+    aside.puzzle
       svg#puzzle(xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000")
         defs
           pattern#puzzle-pattern(height="100%" width="100%" patternUnits="userSpaceOnUse")
@@ -48,10 +48,10 @@ html
         li
           a(href="https://github.com/pouretrebelle/jigsaws" title="Find the source code for all the art on GitHub")
             include icons/github
-      form.newsletter.js-avoid(action="https://hexatope.us17.list-manage.com/subscribe/post?u=4c51e43f1162adc62d41e6ea5&amp;id=a1420a8048" method="post" target="_blank")
+      form.newsletter(action="https://hexatope.us17.list-manage.com/subscribe/post?u=4c51e43f1162adc62d41e6ea5&amp;id=a1420a8048" method="post" target="_blank")
         label
-          | Put your email here to be notified when you can buy a puzzle for yourself:&ensp;
-          input.newsletter__input(type="email" name="EMAIL")
+          span.js-avoid Put your email here to be notified when you can buy a puzzle for yourself:&ensp;
+          input.newsletter__input.js-avoid(type="email" name="EMAIL")
           div(style="position: absolute; left: -5000px;" aria-hidden="true")
             input(type="text" name="b_4c51e43f1162adc62d41e6ea5_a1420a8048" tabindex="-1" value="")
             input(type="submit")
