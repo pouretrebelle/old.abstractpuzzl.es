@@ -34,6 +34,10 @@ const background: {
   placedPieces: [],
 }
 
+const paths = document.querySelectorAll('#puzzle path') as NodeListOf<
+  HTMLElement
+>
+
 const PLACEMENT_ATTEMPTS = 1000
 
 const testPlacement = (pos: Vector2, avoidDistance: number) => {
@@ -76,9 +80,6 @@ const init = () => {
   const { top, left, width, height } = background.puzzle
   const middle = new Vector2(left + width / 2, top + height / 2)
   const cardinalMiddleToEdge = width / 2 + 10
-  const paths = document.querySelectorAll('#puzzle path') as NodeListOf<
-    HTMLElement
-  >
 
   const count = rows * columns
 
@@ -142,7 +143,33 @@ const init = () => {
     )
     paths[i].style.setProperty('--x', `${difference.x * 100}%`)
     paths[i].style.setProperty('--y', `${difference.y * 100}%`)
+    paths[i].style.setProperty(
+      '--transition-speed',
+      `${Math.floor(difference.magnitude() * 1000)}ms`
+    )
   }
+
+  setAnimation()
+}
+
+let anim: NodeJS.Timeout
+const setAnimation = () => {
+  setTimeout(() => {
+    anim = setInterval(pickOff, 300)
+  }, 1000)
+}
+
+let animI = 0
+const pickOff = () => {
+  const { rows, columns } = background
+  if (animI === rows * columns) return clearInterval(anim)
+
+  const path = paths[animI]
+  path.style.removeProperty('--rotate')
+  path.style.removeProperty('--x')
+  path.style.removeProperty('--y')
+
+  animI++
 }
 
 window.addEventListener('load', init)
