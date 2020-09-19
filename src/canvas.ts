@@ -1,5 +1,5 @@
 import Vector2 from './utils/Vector2'
-import { clamp, random, randomInteger } from './utils/numberUtils'
+import { clamp, map, random, randomInteger } from './utils/numberUtils'
 
 let screenWidth = window.innerWidth
 let screenHeight = window.innerHeight
@@ -153,7 +153,7 @@ const init = () => {
 }
 
 const setupTriggers = () => {
-  document.body.style.cursor = 'crosshair'
+  document.body.style.setProperty('cursor', 'crosshair')
   const triggers = Array.from(document.querySelectorAll('#puzzle path'))
   const touchedTriggers: number[] = []
 
@@ -187,17 +187,125 @@ const setupTriggers = () => {
 
     touchedTriggers.push(index)
     const path = paths[index]
+    if (touchedTriggers.length === triggers.length) onPuzzleCompletion(path)
+
     path.style.removeProperty('--rotate')
     path.style.removeProperty('--x')
     path.style.removeProperty('--y')
-
-    if (touchedTriggers.length === triggers.length) onPuzzleCompletion()
   }
 
-  const onPuzzleCompletion = () => {
+  const onPuzzleCompletion = (lastPath: HTMLElement) => {
     document.removeEventListener('touchmove', onTouchMove)
-    document.body.style.cursor = ''
+
+    const transitionSpeed = parseInt(
+      lastPath.style.getPropertyValue('--transition-speed')
+    )
+
+    window.setTimeout(() => {
+      document.body.style.removeProperty('cursor')
+    }, transitionSpeed)
+    window.setTimeout(celebrate, transitionSpeed)
   }
+}
+
+const spark = new Path2D(
+  'M-5 1c-.6 0-1-.4-1-1s.4-1 1-1c4 0 4-5 4-7 0-.6.4-1 1-1s1 .4 1 1c0 2 0 7 4 7 .6 0 1 .4 1 1s-.4 1-1 1C1 1 1 6 1 8c0 .6-.4 1-1 1s-1-.4-1-1c0-2 0-7-4-7z'
+)
+
+class Spark {
+  canvasWidth: number
+  canvasHeight: number
+  x: number
+  y: number
+  scale: number
+  through: number
+  speed: number
+
+  constructor({
+    canvasWidth,
+    canvasHeight,
+    start,
+  }: {
+    canvasWidth: number
+    canvasHeight: number
+    start: number
+  }) {
+    this.canvasWidth = canvasWidth
+    this.canvasHeight = canvasHeight
+    this.x = 0
+    this.y = 0
+    this.scale = 0
+    this.through = start
+    this.speed = random(0.005, 0.015)
+    this.position()
+  }
+
+  position() {
+    const scale = Math.pow(random(0.75, 1.75), 3)
+    this.x = random(12 * scale, this.canvasWidth - 12 * scale)
+    this.y = random(18 * scale, this.canvasHeight - 18 * scale)
+    this.scale = scale
+  }
+
+  draw(c: CanvasRenderingContext2D) {
+    if (this.through < 0) return
+
+    c.save()
+    c.translate(this.x, this.y)
+    const curScale = map(
+      Math.pow(Math.sin(this.through * Math.PI), 2),
+      0,
+      1,
+      this.scale * 0.5,
+      this.scale
+    )
+    c.globalAlpha = Math.sin(this.through * Math.PI)
+    c.scale(curScale, curScale)
+    c.fill(spark)
+    c.restore()
+  }
+
+  update() {
+    this.through += this.speed
+    if (this.through >= 1) {
+      this.position()
+      this.through = 0
+    }
+  }
+}
+
+const celebrate = () => {
+  const canvas = document.getElementById(
+    'puzzle-celebration'
+  ) as HTMLCanvasElement
+
+  const { clientWidth: width, clientHeight: height } = canvas
+
+  const pixelDensity = window.devicePixelRatio || 1
+  canvas.width = width * pixelDensity
+  canvas.height = height * pixelDensity
+
+  const c = canvas.getContext('2d') as CanvasRenderingContext2D
+  c.scale(pixelDensity, pixelDensity)
+  c.fillStyle = 'white'
+
+  const sparks: Spark[] = []
+  for (let i = 0; i < 20; i++) {
+    sparks.push(
+      new Spark({ canvasWidth: width, canvasHeight: height, start: -i / 10 })
+    )
+  }
+
+  const draw = () => {
+    c.clearRect(0, 0, width, height)
+    sparks.forEach((spark) => {
+      spark.update()
+      spark.draw(c)
+    })
+
+    requestAnimationFrame(draw)
+  }
+  requestAnimationFrame(draw)
 }
 
 window.addEventListener('load', init)
