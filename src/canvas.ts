@@ -71,7 +71,7 @@ const pickPlacement = (pos: Vector2, radius: number) =>
   pos.plusNew(
     placementVector
       .normalise()
-      .multiplyEq(random(radius / 2, radius))
+      .multiplyEq(random(0, radius))
       .rotate(random(0, Math.PI))
   )
 
@@ -153,32 +153,51 @@ const init = () => {
 }
 
 const setupTriggers = () => {
-  const triggers = Array.from(document.getElementsByClassName('js-trigger'))
-  triggers.forEach((trigger) => {
+  document.body.style.cursor = 'crosshair'
+  const triggers = Array.from(document.querySelectorAll('#puzzle path'))
+  const touchedTriggers: number[] = []
+
+  triggers.forEach((trigger, index) => {
+    trigger.setAttribute('index', String(index))
     trigger.addEventListener(
       'mouseenter',
       () => {
-        const index = parseInt(trigger.getAttribute('data-index') as string, 10)
         clearPiece(index)
       },
       { once: true }
     )
-
-    trigger.addEventListener(
-      'mouseleave',
-      () => {
-        trigger.classList.add('js-done')
-      },
-      { once: true }
-    )
   })
-}
 
-const clearPiece = (index: number) => {
-  const path = paths[index]
-  path.style.removeProperty('--rotate')
-  path.style.removeProperty('--x')
-  path.style.removeProperty('--y')
+  const onTouchMove = (e: TouchEvent) => {
+    Array.from(e.touches).forEach((touch) => {
+      const element = document.elementFromPoint(touch.pageX, touch.pageY)
+      if (!element) return
+
+      const index = element.getAttribute('index')
+
+      if (!index) return
+
+      clearPiece(parseInt(index, 10))
+    })
+  }
+  document.addEventListener('touchmove', onTouchMove)
+
+  const clearPiece = (index: number) => {
+    if (touchedTriggers.indexOf(index) !== -1) return
+
+    touchedTriggers.push(index)
+    const path = paths[index]
+    path.style.removeProperty('--rotate')
+    path.style.removeProperty('--x')
+    path.style.removeProperty('--y')
+
+    if (touchedTriggers.length === triggers.length) onPuzzleCompletion()
+  }
+
+  const onPuzzleCompletion = () => {
+    document.removeEventListener('touchmove', onTouchMove)
+    document.body.style.cursor = ''
+  }
 }
 
 window.addEventListener('load', init)

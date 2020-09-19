@@ -3,7 +3,7 @@ html
   head
     title ABSTRACT PUZZLES
     link(rel="icon" type="image/png" href="/favicon.png" sizes="64x64")
-    meta(name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no")
+    meta(name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no")
     meta(property="og:title" content="ABSTRACT PUZZLES")
     meta(name="twitter:title" content="ABSTRACT PUZZLES")
     meta(name="description" content="Abstract Puzzles is an experimental generative art jigsaw project by Charlotte Dann")
@@ -33,11 +33,6 @@ html
           pattern#puzzle-pattern(height="100%" width="100%" patternUnits="userSpaceOnUse")
             image(width="1000" height="1000" preserveAspectRatio="xMidYMax slice", xlink:href="assets/puzzle.png")
         include assets/puzzle.svg
-      .puzzle__triggers
-        - var n = 0
-        while n < (14 * 14)
-          i.js-trigger(data-index=n)
-          - n++
 
     footer.section
       ul.links.js-avoid

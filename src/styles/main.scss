@@ -10,16 +10,15 @@ $columns: 14;
 :root {
   --color-text: #{$dark};
   --color-background: #{$light};
-  --color-frame: #{desaturate(darken($light, 5%), 50%)};
-  --color-hightlight: #f96767;
-
-  --windowWidthScalar: 1;
-  --windowHeightScalar: 1;
+  --color-background-puzzle: #{desaturate(darken($light, 5%), 50%)};
+  --color-input-border: #{desaturate(darken($light, 10%), 50%)};
+  --color-hightlight: rgb(0, 255, 108);
 
   @media (prefers-color-scheme: dark) {
     --color-text: #{$light};
     --color-background: #{$dark};
-    --color-frame: #{desaturate(lighten($dark, 5%), 50%)};
+    --color-background-puzzle: #{lighten($dark, 10%)};
+    --color-input-border: #{lighten($dark, 40%)};
   }
 }
 
@@ -58,8 +57,8 @@ button {
 }
 
 .section {
-  position: relative;
-  z-index: 1;
+  // position: relative;
+  // z-index: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -76,7 +75,7 @@ button {
   position: relative;
   margin: 0.5em auto;
   padding: 0.2em;
-  background: var(--color-frame);
+  background: var(--color-background-puzzle);
 
   svg {
     width: 100%;
@@ -90,7 +89,7 @@ button {
     --rotate: 0deg;
     --transition-speed: 500ms;
     fill: url(#puzzle-pattern);
-    stroke: var(--color-frame);
+    stroke: var(--color-background-puzzle);
     stroke-width: 0.1vmin;
     transform-origin: calc(50% + 50% * var(--pieceX))
       calc(50% + 50% * var(--pieceY));
@@ -126,30 +125,16 @@ button {
 
 .newsletter__input {
   width: clamp(200px, 80vw, 15ch);
-  border: 2px solid var(--color-frame);
+  border: 2px solid var(--color-input-border);
   outline: none;
   margin: 0.5em 0;
+  background: var(--color-background);
 
   &:focus {
     border-color: var(--color-hightlight);
   }
 }
 
-.puzzle__triggers {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  top: 0;
-  left: 0;
-  display: flex;
-  flex-flow: column wrap;
-
-  i {
-    flex: 1 1 calc(100% / 14);
-    cursor: pointer;
-  }
-
-  .js-done {
-    pointer-events: none;
-  }
+.js-avoid {
+  cursor: initial;
 }
