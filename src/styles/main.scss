@@ -90,12 +90,21 @@ button {
     --transition-speed: 500ms;
     fill: url(#puzzle-pattern);
     stroke: var(--color-background-puzzle);
-    stroke-width: 0.1vmin;
+    stroke-width: 0.2%;
     transform-origin: calc(50% + 50% * var(--pieceX))
       calc(50% + 50% * var(--pieceY));
     transform: translate(var(--x), var(--y)) rotate(var(--rotate));
     transition: transform var(--transition-speed) ease;
   }
+}
+
+.canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  cursor: default;
 }
 
 .links {
