@@ -68,6 +68,10 @@ button {
   margin-top: 0.2em;
 }
 
+.intro .no-wrap {
+  white-space: nowrap;
+}
+
 .puzzle {
   --size: clamp(200px, 50vh, 80vw);
   width: var(--size);
