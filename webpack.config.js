@@ -57,6 +57,10 @@ module.exports = (webpackEnv) => {
           ],
         },
         {
+          test: /puzzle\.png$/,
+          loader: 'responsive-loader',
+        },
+        {
           test: /\.(jpe?g|gif|png|svg|woff|ttf|wav|mp3)$/,
           loader: 'file-loader',
           options: {
