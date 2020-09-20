@@ -3,6 +3,7 @@ import { clamp, map, random, randomInteger } from './utils/numberUtils'
 
 let screenWidth = window.innerWidth
 let screenHeight = window.innerHeight
+let screenMin = screenWidth < screenHeight ? screenWidth : screenHeight
 
 interface Box extends Pick<DOMRect, 'top' | 'left' | 'width' | 'height'> {}
 
@@ -18,7 +19,9 @@ const getBox = (element: Element, buffer: number = 0): Box => {
 
 const puzzle = document.getElementById('puzzle') as HTMLElement
 const avoid = Array.from(document.getElementsByClassName('js-avoid'))
-const avoidBoxes = avoid.map((element) => getBox(element, 20))
+const avoidBoxes = avoid.map((element) =>
+  getBox(element, Math.min(screenMin * 0.03, 20))
+)
 
 const background: {
   rows: number
@@ -29,7 +32,7 @@ const background: {
 } = {
   rows: 14,
   columns: 14,
-  avoidBoxes: [getBox(puzzle, 30), ...avoidBoxes],
+  avoidBoxes: [getBox(puzzle, Math.min(screenMin * 0.03, 30)), ...avoidBoxes],
   puzzle: getBox(puzzle),
   placedPieces: [],
 }
@@ -38,7 +41,7 @@ const paths = document.querySelectorAll('#puzzle path') as NodeListOf<
   HTMLElement
 >
 
-const PLACEMENT_ATTEMPTS = 1000
+const PLACEMENT_ATTEMPTS = 500
 
 const testPlacement = (pos: Vector2, avoidDistance: number) => {
   const { avoidBoxes, placedPieces } = background
@@ -58,10 +61,12 @@ const testPlacement = (pos: Vector2, avoidDistance: number) => {
   if (hitBox) return false
 
   // avoid placed pieces
-  const hitDot = placedPieces.some(
-    (piecePos) => pos.dist(piecePos) < avoidDistance
-  )
-  if (hitDot) return false
+  if (avoidDistance > 0) {
+    const hitDot = placedPieces.some(
+      (piecePos) => pos.dist(piecePos) < avoidDistance
+    )
+    if (hitDot) return false
+  }
 
   return true
 }
@@ -89,7 +94,7 @@ const init = () => {
   )
   let avoidDistance = Math.max(
     width / columns,
-    Math.sqrt(availablePixels / count) * 0.75
+    Math.sqrt(availablePixels / count) * 0.5
   )
 
   for (let i = 0; i < count; i++) {
@@ -119,19 +124,26 @@ const init = () => {
     const push = vecFromMiddle.multiplyEq(fullDist * 2.2)
     const proposedPos = startPos.plusNew(push)
 
-    const radius = fullDist + 10
+    // keep proposed position within page
+    if (proposedPos.x < 0) proposedPos.x = 0
+    if (proposedPos.x > screenWidth) proposedPos.x = screenWidth
+    if (proposedPos.y < 0) proposedPos.y = 0
+    if (proposedPos.y > screenHeight) proposedPos.y = screenHeight
+
+    const radius = fullDist * 0.5 + 20
 
     let pos = pickPlacement(proposedPos, radius)
     let tries = 1
     while (
-      !testPlacement(pos, avoidDistance - tries) &&
+      !testPlacement(pos, avoidDistance - tries / 20) &&
       tries < PLACEMENT_ATTEMPTS
     ) {
       tries++
-      pos = pickPlacement(pos, radius + tries)
+      pos = pickPlacement(pos, radius + tries / 20)
     }
-    if (tries === PLACEMENT_ATTEMPTS) pos = proposedPos
-    console.info(tries)
+    if (tries === PLACEMENT_ATTEMPTS) {
+      pos = proposedPos
+    }
 
     background.placedPieces.push(pos)
 
