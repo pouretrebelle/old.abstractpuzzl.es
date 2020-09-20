@@ -189,9 +189,15 @@ const setupTriggers = () => {
     const path = paths[index]
     if (touchedTriggers.length === triggers.length) onPuzzleCompletion(path)
 
-    path.style.removeProperty('--rotate')
-    path.style.removeProperty('--x')
-    path.style.removeProperty('--y')
+    // svg stacking order is the DOM order
+    // so we have to move the path to the end to ensure it overlaps other pieces when moving into place
+    const parent = path.parentNode as Node
+    parent.appendChild(path)
+    window.setTimeout(() => {
+      path.style.removeProperty('--rotate')
+      path.style.removeProperty('--x')
+      path.style.removeProperty('--y')
+    }, 50)
   }
 
   const onPuzzleCompletion = (lastPath: HTMLElement) => {
