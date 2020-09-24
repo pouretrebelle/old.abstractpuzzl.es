@@ -1,5 +1,5 @@
 import { triggerCelebration } from './celebration'
-import { settings, setup } from './settings'
+import { setup } from './setup'
 
 const touchedTriggers: number[] = []
 
@@ -35,13 +35,12 @@ document.addEventListener('touchmove', onTouchMove)
 
 const clearPiece = (index: number) => {
   const { paths } = setup
-  const { rows, columns } = settings
 
   if (touchedTriggers.indexOf(index) !== -1) return
 
   touchedTriggers.push(index)
   const path = paths[index]
-  if (touchedTriggers.length === rows * columns) onPuzzleCompletion(path)
+  if (touchedTriggers.length === paths.length) onPuzzleCompletion(path)
 
   // svg stacking order is the DOM order
   // so we have to move the path to the end to ensure it overlaps other pieces when moving into place
@@ -54,7 +53,7 @@ const clearPiece = (index: number) => {
   }, 50)
 }
 
-const onPuzzleCompletion = (lastPath: HTMLElement) => {
+const onPuzzleCompletion = (lastPath: SVGGraphicsElement) => {
   document.removeEventListener('touchmove', onTouchMove)
 
   const transitionSpeed = parseInt(

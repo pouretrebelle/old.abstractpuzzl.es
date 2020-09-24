@@ -1,7 +1,7 @@
 import { clamp, random, randomInteger } from './utils/numberUtils'
 import Vector2 from './utils/Vector2'
 import { setupTriggers } from './interaction'
-import { settings, setup } from './settings'
+import { setup } from './setup'
 
 const PLACEMENT_ATTEMPTS = 500
 
@@ -45,39 +45,49 @@ const pickPlacement = (pos: Vector2, radius: number) =>
   )
 
 export const placePieces = () => {
-  const { rows, columns } = settings
-  const { screenWidth, screenHeight, avoidBoxes, puzzleBox, paths } = setup
+  const {
+    screenWidth,
+    screenHeight,
+    avoidBoxes,
+    puzzleBox,
+    paths,
+    viewBox,
+  } = setup
   const { top, left, width, height } = puzzleBox
 
   const middle = new Vector2(left + width / 2, top + height / 2)
   const cardinalMiddleToEdge = width / 2 + 10
 
-  const count = rows * columns
+  const count = paths.length
 
   const availablePixels = avoidBoxes.reduce(
     (prev, { width, height }) => prev - width * height,
     screenWidth * screenHeight
   )
   let avoidDistance = Math.max(
-    width / columns,
+    width / Math.sqrt(count),
     Math.sqrt(availablePixels / count) * 0.5
   )
 
   for (let i = 0; i < count; i++) {
-    const row = i % rows
-    const column = Math.floor(i / columns)
-    const startX = left + ((column + 0.5) / columns) * width
-    const startY = top + ((row + 0.5) / rows) * height
+    const path = paths[i]
+    const {
+      x: pathLeft,
+      y: pathTop,
+      width: pathWidth,
+      height: pathHeight,
+    } = path.getBBox()
+    const pathX = pathLeft + pathWidth / 2
+    const pathY = pathTop + pathHeight / 2
+
+    const pieceX = pathX / viewBox.x
+    const pieceY = pathY / viewBox.y
+    const startX = left + pieceX * width
+    const startY = top + pieceY * height
     const startPos = new Vector2(startX, startY)
 
-    paths[i].style.setProperty(
-      '--pieceX',
-      String(-1 + (2 * (column + 0.5)) / columns)
-    )
-    paths[i].style.setProperty(
-      '--pieceY',
-      String(-1 + (2 * (row + 0.5)) / rows)
-    )
+    paths[i].style.setProperty('--pieceX', String(pieceX))
+    paths[i].style.setProperty('--pieceY', String(pieceY))
 
     const vecFromMiddle = startPos.minusNew(middle)
     const vecFromMiddleMag = vecFromMiddle.magnitude()
