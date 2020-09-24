@@ -95,8 +95,7 @@ button {
     fill: url(#puzzle-pattern);
     stroke: var(--color-background-puzzle);
     stroke-width: 0.2%;
-    transform-origin: calc(50% + 50% * var(--pieceX))
-      calc(50% + 50% * var(--pieceY));
+    transform-origin: calc(100% * var(--pieceX)) calc(100% * var(--pieceY));
     transform: translate(var(--x), var(--y)) rotate(var(--rotate));
     transition: transform var(--transition-speed) ease;
   }

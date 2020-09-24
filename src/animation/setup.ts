@@ -1,10 +1,5 @@
 import { getBox } from './utils/box'
 
-export const settings = {
-  rows: 14,
-  columns: 14,
-}
-
 const screenWidth = window.innerWidth
 const screenHeight = window.innerHeight
 const screenMin = screenWidth < screenHeight ? screenWidth : screenHeight
@@ -21,5 +16,11 @@ export const setup = {
   screenMin,
   avoidBoxes: [getBox(puzzle, Math.min(screenMin * 0.03, 30)), ...avoidBoxes],
   puzzleBox: getBox(puzzle),
-  paths: document.querySelectorAll('#puzzle path') as NodeListOf<HTMLElement>,
+  paths: document.querySelectorAll('#puzzle path') as NodeListOf<
+    SVGGraphicsElement
+  >,
+  viewBox: {
+    x: 1000,
+    y: 1000,
+  },
 }
