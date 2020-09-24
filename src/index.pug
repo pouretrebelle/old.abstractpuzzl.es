@@ -54,8 +54,11 @@ html
             include icons/github
       form.newsletter(action="https://hexatope.us17.list-manage.com/subscribe/post?u=4c51e43f1162adc62d41e6ea5&amp;id=a1420a8048" method="post" target="_blank")
         label
-          span.js-avoid Put your email here to be notified when you can buy a puzzle for yourself:&ensp;
+          span.no-wrap.js-avoid Put your email here to be notified when
+          | 
+          span.no-wrap.js-avoid you can buy one for yourself:&ensp;
           input.newsletter__input.js-avoid(type="email" name="EMAIL")
           div(style="position: absolute; left: -5000px;" aria-hidden="true")
             input(type="text" name="b_4c51e43f1162adc62d41e6ea5_a1420a8048" tabindex="-1" value="")
             input(type="submit")
+      span.disclaimer.js-avoid N.B. that may never happen
