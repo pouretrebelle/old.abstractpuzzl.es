@@ -22,43 +22,44 @@ html
       gtag('config', 'UA-112639076-1');
 
   body
-    main.section.intro
-      h1.js-avoid Abstract Puzzles
-      p
-        span.no-wrap.js-avoid A generative art jigsaw project
-        | 
-        span.no-wrap.js-avoid by #[a(href="https://charlottedann.com/") Charlotte&nbsp;Dann]
-      p.js-avoid One puzzle posted every week
-
-    aside.puzzle#puzzle-wrapper
-      svg#puzzle(xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000")
-        defs
-          pattern#puzzle-pattern(height="100%" width="100%" patternUnits="userSpaceOnUse")
-            image#puzzle-image(width="1000" height="1000" preserveAspectRatio="xMidYMax slice" xlink:href="assets/puzzle.png?{sizes:[200]}")
-        include assets/puzzle.svg
-      canvas.canvas#puzzle-celebration
-
-    footer.section
-      ul.links.js-avoid
-        li
-          a(href="https://www.instagram.com/abstractpuzzles/" title="Follow on Instagram")
-            include icons/instagram
-        li
-          a(href="https://www.youtube.com/channel/UCDcKvGgdl8Jf7mROVZlhjog" title="Watch full-length solves on YouTube")
-            include icons/youtube
-        li
-          a(href="https://twitter.com/abstractpuzzles" title="Follow on Twitter")
-            include icons/twitter
-        li
-          a(href="https://github.com/pouretrebelle/jigsaws" title="Find the source code for all the art on GitHub")
-            include icons/github
-      form.newsletter(action="https://hexatope.us17.list-manage.com/subscribe/post?u=4c51e43f1162adc62d41e6ea5&amp;id=a1420a8048" method="post" target="_blank")
-        label
-          span.no-wrap.js-avoid Put your email here to be notified when
+    .page
+      main.section.intro
+        h1.js-avoid Abstract Puzzles
+        p
+          span.no-wrap.js-avoid A generative art jigsaw project
           | 
-          span.no-wrap.js-avoid you can buy one for yourself:&ensp;
-          input.newsletter__input.js-avoid(type="email" name="EMAIL")
-          div(style="position: absolute; left: -5000px;" aria-hidden="true")
-            input(type="text" name="b_4c51e43f1162adc62d41e6ea5_a1420a8048" tabindex="-1" value="")
-            input(type="submit")
-      span.disclaimer.js-avoid N.B. that may never happen
+          span.no-wrap.js-avoid by #[a(href="https://charlottedann.com/") Charlotte&nbsp;Dann]
+        p.js-avoid One puzzle posted every week
+
+      aside.puzzle#puzzle-wrapper
+        svg#puzzle(xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000")
+          defs
+            pattern#puzzle-pattern(height="100%" width="100%" patternUnits="userSpaceOnUse")
+              image#puzzle-image(width="1000" height="1000" preserveAspectRatio="xMidYMax slice" xlink:href="assets/puzzle.png?{sizes:[200]}")
+          include assets/puzzle.svg
+        canvas.canvas#puzzle-celebration
+
+      footer.section
+        ul.links.js-avoid
+          li
+            a(href="https://www.instagram.com/abstractpuzzles/" title="Follow on Instagram")
+              include icons/instagram
+          li
+            a(href="https://www.youtube.com/channel/UCDcKvGgdl8Jf7mROVZlhjog" title="Watch full-length solves on YouTube")
+              include icons/youtube
+          li
+            a(href="https://twitter.com/abstractpuzzles" title="Follow on Twitter")
+              include icons/twitter
+          li
+            a(href="https://github.com/pouretrebelle/jigsaws" title="Find the source code for all the art on GitHub")
+              include icons/github
+        form.newsletter(action="https://hexatope.us17.list-manage.com/subscribe/post?u=4c51e43f1162adc62d41e6ea5&amp;id=a1420a8048" method="post" target="_blank")
+          label
+            span.no-wrap.js-avoid Put your email here to be notified when
+            | 
+            span.no-wrap.js-avoid you can buy one for yourself:&ensp;
+            input.newsletter__input.js-avoid(type="email" name="EMAIL")
+            div(style="position: absolute; left: -5000px;" aria-hidden="true")
+              input(type="text" name="b_4c51e43f1162adc62d41e6ea5_a1420a8048" tabindex="-1" value="")
+              input(type="submit")
+        span.disclaimer.js-avoid N.B. that may never happen

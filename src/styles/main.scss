@@ -23,21 +23,25 @@ $columns: 14;
 }
 
 html,
-body {
+body,
+.page {
   height: 100%;
 }
 
 body {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-around;
   padding: 1em;
   background: var(--color-background);
   font-family: Helvetica, Ariel, sans-serif;
   color: var(--color-text);
   font-size: clamp(18px, 5vmin, 32px);
   text-align: center;
+}
+
+.page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
 }
 
 ::selection {
