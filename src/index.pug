@@ -1,5 +1,5 @@
 doctype html
-html
+html(lang="en")
   head
     title Abstract Puzzles
     link(rel="icon" type="image/png" href="/favicon.png" sizes="64x64")
@@ -32,7 +32,7 @@ html
         p.js-avoid One puzzle posted every week
 
       aside.puzzle#puzzle-wrapper
-        svg#puzzle(xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000")
+        svg#puzzle(xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000" aria-label="Latest jigsaw puzzle design")
           defs
             pattern#puzzle-pattern(height="100%" width="100%" patternUnits="userSpaceOnUse")
               image#puzzle-image(width="1000" height="1000" preserveAspectRatio="xMidYMax slice" xlink:href="assets/puzzle.png?{sizes:[200]}")
