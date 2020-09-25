@@ -16,6 +16,7 @@ export const setup = {
   screenMin,
   avoidBoxes: [getBox(puzzle, Math.min(screenMin * 0.03, 30)), ...avoidBoxes],
   puzzleBox: getBox(puzzle),
+  puzzle,
   paths: document.querySelectorAll('#puzzle path') as NodeListOf<
     SVGGraphicsElement
   >,
