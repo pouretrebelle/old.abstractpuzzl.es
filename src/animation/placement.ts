@@ -50,6 +50,7 @@ export const placePieces = () => {
     screenHeight,
     avoidBoxes,
     puzzleBox,
+    puzzle,
     paths,
     viewBox,
   } = setup
@@ -131,11 +132,15 @@ export const placePieces = () => {
     )
     paths[i].style.setProperty('--x', `${difference.x * 100}%`)
     paths[i].style.setProperty('--y', `${difference.y * 100}%`)
-    paths[i].style.setProperty(
-      '--transition-speed',
-      `${Math.floor(clamp(difference.magnitude() * 1000, 200, 400))}ms`
-    )
+
+    setTimeout(() => {
+      paths[i].style.setProperty(
+        '--transition-speed',
+        `${Math.floor(clamp(difference.magnitude() * 1000, 200, 400))}ms`
+      )
+    }, 100)
   }
 
   setupTriggers()
+  puzzle.classList.remove('js-hidden')
 }
