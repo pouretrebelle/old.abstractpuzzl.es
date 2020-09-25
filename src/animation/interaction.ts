@@ -53,9 +53,7 @@ const clearPiece = (index: number) => {
   const parent = path.parentNode as Node
   parent.appendChild(path)
   window.setTimeout(() => {
-    path.style.removeProperty('--rotate')
-    path.style.removeProperty('--x')
-    path.style.removeProperty('--y')
+    path.style.removeProperty('transform')
   }, 50)
 }
 

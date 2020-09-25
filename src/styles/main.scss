@@ -96,16 +96,9 @@ button {
   }
 
   path {
-    --x: 0px;
-    --y: 0px;
-    --rotate: 0deg;
-    --transition-speed: 0;
     fill: url(#puzzle-pattern);
     stroke: var(--color-background-puzzle);
     stroke-width: 0.2%;
-    transform-origin: calc(100% * var(--pieceX)) calc(100% * var(--pieceY));
-    transform: translate(var(--x), var(--y)) rotate(var(--rotate));
-    transition: transform var(--transition-speed) ease;
   }
 }
 

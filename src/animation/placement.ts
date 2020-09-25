@@ -87,9 +87,6 @@ export const placePieces = () => {
     const startY = top + pieceY * height
     const startPos = new Vector2(startX, startY)
 
-    paths[i].style.setProperty('--pieceX', String(pieceX))
-    paths[i].style.setProperty('--pieceY', String(pieceY))
-
     const vecFromMiddle = startPos.minusNew(middle)
     const vecFromMiddleMag = vecFromMiddle.magnitude()
     vecFromMiddle.normalise()
@@ -127,16 +124,22 @@ export const placePieces = () => {
     const difference = pos.minusNew(startPos).divideEq(width)
 
     paths[i].style.setProperty(
-      '--rotate',
-      `${randomInteger(50, 100) * (Math.random() < 0.5 ? -1 : 1)}deg`
+      'transform-origin',
+      `${(pieceX * 100).toFixed(3)}% ${(pieceY * 100).toFixed(3)}%`
     )
-    paths[i].style.setProperty('--x', `${difference.x * 100}%`)
-    paths[i].style.setProperty('--y', `${difference.y * 100}%`)
+    paths[i].style.setProperty(
+      'transform',
+      `translate(${difference.x * 100}%, ${difference.y * 100}%) rotate(${
+        randomInteger(50, 100) * (Math.random() < 0.5 ? -1 : 1)
+      }deg)`
+    )
 
     setTimeout(() => {
       paths[i].style.setProperty(
-        '--transition-speed',
-        `${Math.floor(clamp(difference.magnitude() * 1000, 200, 400))}ms`
+        'transition',
+        `transform ${Math.floor(
+          clamp(difference.magnitude() * 1000, 200, 400)
+        )}ms ease`
       )
     }, 100)
   }
