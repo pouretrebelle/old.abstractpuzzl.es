@@ -1,6 +1,6 @@
 import { clamp, random, randomInteger } from './utils/numberUtils'
 import Vector2 from './utils/Vector2'
-import { setupTriggers } from './interaction'
+import { setupTriggers, unfurl } from './interaction'
 import { setup } from './setup'
 
 const PLACEMENT_ATTEMPTS = 500
@@ -143,4 +143,6 @@ export const placePieces = () => {
 
   setupTriggers()
   puzzle.classList.remove('js-hidden')
+
+  if (matchMedia('(hover: none)').matches) unfurl()
 }

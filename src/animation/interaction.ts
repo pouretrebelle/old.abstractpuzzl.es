@@ -6,11 +6,10 @@ const touchedTriggers: number[] = []
 export const setupTriggers = () => {
   const { paths } = setup
   document.body.style.setProperty('cursor', 'crosshair')
-  const triggers = Array.from(paths)
 
-  triggers.forEach((trigger, index) => {
-    trigger.setAttribute('index', String(index))
-    trigger.addEventListener(
+  paths.forEach((path, index) => {
+    path.setAttribute('index', String(index))
+    path.addEventListener(
       'mouseenter',
       () => {
         clearPiece(index)
@@ -32,6 +31,13 @@ const onTouchMove = (e: TouchEvent) => {
   })
 }
 document.addEventListener('touchmove', onTouchMove)
+
+export const unfurl = () => {
+  const { paths } = setup
+  paths.forEach((path, index) => {
+    setTimeout(() => clearPiece(index), 1000 + index * 150)
+  })
+}
 
 const clearPiece = (index: number) => {
   const { paths } = setup
