@@ -1,0 +1,49 @@
+.puzzle {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  grid-gap: 5%;
+  margin: 3em 0;
+}
+
+.puzzle__media {
+  grid-column-end: span 8;
+  position: relative;
+}
+
+// .puzzle__img:last-child {
+//   position: absolute;
+//   transition: opacity 0.1s linear;
+//   opacity: 0;
+//   top: 0;
+//   left: 0;
+//   z-index: 1;
+
+//   &:hover {
+//     opacity: 1;
+//   }
+// }
+
+.puzzle__info {
+  grid-column-end: span 4;
+}
+
+.puzzle__title {
+  font-size: 2em;
+  margin-bottom: 1em;
+  line-height: 0.8;
+}
+
+.puzzle__info {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.cta {
+  display: block;
+  margin: 0.5em 0 0;
+  padding: 0.2em 0.4em;
+  border: 0.1em solid var(--color-hightlight);
+  border-radius: 0.1em;
+  font-size: 0.75em;
+}

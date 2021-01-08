@@ -1,0 +1,12 @@
+li.puzzle
+  .puzzle__media
+    - var src = `jigsaws/#{jigsaw}/1.jpg?{sizes:[1480]}`
+    img.puzzle__img(preserveAspectRatio="xMidYMax slice" src=src)
+    img.puzzle__img(preserveAspectRatio="xMidYMax slice" src="jigsaws/006/7.jpg?{sizes:[1480]}")
+  .puzzle__info
+    h2.puzzle__title #{jigsaw}
+    .puzzle__meta
+      button.cta Solve it
+      button.cta Open in app
+      button.cta Read code
+      button.cta Watch solve

@@ -57,14 +57,14 @@ module.exports = (webpackEnv) => {
           ],
         },
         {
-          test: /puzzle\.png$/,
+          test: /\.(jpe?g|gif|png)$/,
           loader: 'responsive-loader',
         },
         {
           test: /\.(jpe?g|gif|png|svg|woff|ttf|wav|mp3)$/,
           loader: 'file-loader',
           options: {
-            name: '[name].[ext]',
+            name: '[path][name].[ext]',
           },
         },
       ],
