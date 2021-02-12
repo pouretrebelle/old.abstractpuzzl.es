@@ -12,7 +12,7 @@ $columns: 14;
   --color-background: #{$light};
   --color-background-puzzle: #{desaturate(darken($light, 5%), 50%)};
   --color-input-border: #{desaturate(darken($light, 10%), 50%)};
-  --color-hightlight: rgb(0, 255, 108);
+  --color-highlight: #14D8F1;
 
   @media (prefers-color-scheme: dark) {
     --color-text: #{$light};
@@ -45,13 +45,13 @@ body {
 }
 
 ::selection {
-  background-color: var(--color-hightlight);
+  background-color: var(--color-highlight);
 }
 
 a,
 button {
   color: inherit;
-  text-decoration-color: var(--color-hightlight);
+  text-decoration-color: var(--color-highlight);
   text-decoration-style: solid;
   outline: none;
 
@@ -123,7 +123,7 @@ button {
   }
 
   a:focus {
-    color: var(--color-hightlight);
+    color: var(--color-highlight);
   }
 
   svg {
@@ -145,7 +145,7 @@ button {
   background: var(--color-background);
 
   &:focus {
-    border-color: var(--color-hightlight);
+    border-color: var(--color-highlight);
   }
 }
 
